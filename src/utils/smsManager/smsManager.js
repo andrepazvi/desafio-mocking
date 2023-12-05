@@ -1,0 +1,23 @@
+const twilio = require('twilio');
+const { config } = require('../../config');
+
+class SmsManager {
+  static instance;
+
+  constructor() {
+    if (SmsManager.instance) return SmsManager.instance; 
+    SmsManager.instance = this;
+    this.twilioClient = twilio(config.twilio_sid, config.twilio_auth_token);
+  }
+
+  async sendSms({ to, body }) {
+    return await this.twilioClient.messages.create({
+      from: config.twilio_phone_number,
+      to,
+      body,
+    });
+  }
+}
+
+module.exports = SmsManager;
+
